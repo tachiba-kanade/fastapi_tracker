@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+alembic
+pydantic-settings
+email-validator
+PyJWT
+pwdlib[argon2]
+python-multipart
+pytest
+pytest-asyncio
+pytest-cov
+httpx
