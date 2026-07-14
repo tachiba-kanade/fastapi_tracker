@@ -1,0 +1,26 @@
+JSON REQUEST
+     ↓
+Pydantic model
+ExpenseCreate
+     ↓
+SQLAlchemy model
+Expense
+     ↓
+POSTGRESQL TABLE
+expenses
+
+
+
+models/
+    ↓
+SQLAlchemy classes
+    ↓
+Database tables
+
+
+schemas/
+    ↓
+Pydantic classes
+    ↓
+Request/response JSON
+

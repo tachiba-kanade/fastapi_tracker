@@ -674,3 +674,56 @@ Add these only after the main requirements are complete:
 - Soft deletion
 - PostgreSQL support
 - CI pipeline with GitHub Actions
+
+
+## How do i visualise this - example
+
+Client
+  │
+  │ POST /expenses
+  ▼
+Router
+  │
+  │ ExpenseCreate
+  ▼
+Service
+  │
+  │ ownership checks
+  ▼
+Repository
+  │
+  │ INSERT
+  ▼
+PostgreSQL
+  │
+  │ saved Expense model
+  ▼
+Response schema
+  │
+  ▼
+Client
+
+
+
+User clicks “Add expense”
+        ↓
+Frontend sends POST /expenses
+        ↓
+FastAPI receives the request
+        ↓
+Pydantic validates the expense
+        ↓
+Service checks business rules
+        ↓
+Repository saves it
+        ↓
+PostgreSQL stores it
+        ↓
+FastAPI returns the saved expense
+
+
+
+## NOTE
+
+
+Every Pydantic schema is technically a Pydantic model, but in our architecture we call it a schema so we don't confuse it with SQLAlchemy database models.
