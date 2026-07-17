@@ -3,8 +3,8 @@
 # FastAPI → SQLAlchemy → PostgreSQL
 
 """
-1. FastAPI starts
-2. Configuration loads
+1. FastAPI starts - done
+2. Configuration loads - done
 3. PostgreSQL connects
 4. SQLAlchemy models are created
 5. Alembic creates tables
@@ -15,9 +15,6 @@
 10. Authentication is added
 
 """
-from pydantic_settings import BaseSettings, SettingsConfigDict
-
-import database_models
 
 """
 .env file
@@ -36,8 +33,8 @@ SettingsConfigDict
 
 """
 
+import os
 from pathlib import Path
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

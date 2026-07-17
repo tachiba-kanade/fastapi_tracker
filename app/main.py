@@ -9,7 +9,9 @@ Connects all routers
 
 """
 from app.core.config import settings
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException, status
+from app.core.database import check_database_connection
+from sqlalchemy.exc import SQLAlchemyError
 
 import database_models
 
@@ -26,7 +28,21 @@ def root():
 @app.get("/health")
 def health_check():
     return {
-        "Status" : "OK, ALL GOOD",
-        "database_config": bool(settings.database_url)
+        "Status" : "FASTAPI IS RUNNING OK, ALL GOOD",
         }
-    
+
+
+@app.get("/db-health")
+def db_health():
+    try:
+        check_database_connection()
+
+        return{
+            "Status" : "DATABASE IS RUNNING OK, ALL GOOD",
+        }
+    except SQLAlchemyError:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Database connection failed",
+            )
+        
