@@ -727,3 +727,7 @@ FastAPI returns the saved expense
 
 
 Every Pydantic schema is technically a Pydantic model, but in our architecture we call it a schema so we don't confuse it with SQLAlchemy database models.
+
+
+python -m alembic init alembic
+Alembic creates a migration environment containing alembic/env.py, alembic/versions/, and alembic.ini.
