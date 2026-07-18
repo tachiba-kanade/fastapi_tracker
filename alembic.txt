@@ -1,0 +1,28 @@
+1. pip install sqlalchemy alembic
+
+2. alembic init alembic - root folder to generate migration, This creates an alembic/ folder and an alembic.ini file in your root workspace.
+
+3. Configure Database URLOpen alembic.ini and locate the sqlalchemy.url property. Set it to match your database credentials
+
+4. To utilize the autogenerate feature, open alembic/env.py and modify it to point to your SQLAlchemy metadata:
+# Import your Base or Metadata object from your application code
+from my_app.database import Base 
+
+# Change target_metadata = None to:
+target_metadata = Base.metadata
+
+
+
+Generate a migration script automatically:bash
+alembic revision --autogenerate -m "Add user table"
+
+Apply all pending migrations to the database:bash
+alembic upgrade head
+
+
+Rollback the last applied migration:bash
+alembic downgrade -1
+
+
+View the historical timeline of scripts:bash
+alembic history
