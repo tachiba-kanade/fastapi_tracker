@@ -15,3 +15,12 @@ ExpenseService   → expense rules
 ReportService    → weekly/monthly calculations
 
 """
+
+from sqlalchemy.orm import Session
+
+from app.schemas import user
+from app.models import User
+
+class UserService:
+    def __init__(self, session: Session):
+        self._db = session
