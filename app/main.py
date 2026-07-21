@@ -45,4 +45,9 @@ def db_health():
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="Database connection failed",
             )
-        
+
+
+#================================ENDPOINT=====================================
+@app.post("/register")
+def register():
+     pass
