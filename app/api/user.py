@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from app.core.database import SessionLocal
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
-# from app.services.user_service import UserService
+from app.services.user_services import UserService
 
 
 router = APIRouter()
