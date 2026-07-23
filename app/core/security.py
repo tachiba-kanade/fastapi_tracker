@@ -23,7 +23,7 @@ def hash_password(plain_password:str) ->str:
     return password_hasher.hash(plain_password)
 
 
-def verify(plain_password:str, hashed_password:str)->bool:
+def verify_password(plain_password:str, hashed_password:str)->bool:
     """
     Check whether a plain password matches a stored hash.
     """

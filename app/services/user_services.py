@@ -15,56 +15,90 @@ ExpenseService   → expense rules
 ReportService    → weekly/monthly calculations
 
 """
-
-from collections import UserString
-
 from fastapi import HTTPException, status
-from httpx import HTTPError
-from sqlalchemy.orm import Session
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
-from app.core.security import hash_password
+from sqlalchemy.orm import Session
 
-from app.schemas.user import UserCreate, UserResponse 
+from app.core.security import hash_password, verify_password
 from app.models.user import User
+from app.schemas.user import UserCreate
 
-class UserService:
-    def __init__(self, session: Session):
-        self._db = session
 
-def get_user_by_email(db:Session, email_address:str)->User|None:  
-    #this  is for the email we want to search for, so either it returns userObj if the email exist, else none 
+def get_user_by_email(
+    db: Session,
+    email_address: str,
+) -> User | None:
     statement = select(User).where(
         User.email_address == email_address
     )
 
-def create_user(db:Session, data:UserCreate)->User:
-    existing_user = get_user_by_email(db, data.email_address)
+    return db.scalar(statement)
 
-    if existing_user is None:
-        raise HTTPException(
-            status.HTTP_409_CONFLICT,
-            "Email already Exist"
 
-        )
-    hash_password = hash_password(
-        data.password
+def create_user(
+    db: Session,
+    data: UserCreate,
+) -> User:
+    email_address = str(data.email_address).lower()
+
+    existing_user = get_user_by_email(
+        db=db,
+        email_address=email_address,
     )
+
+    if existing_user is not None:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already exists",
+        )
+
+    hashed_password = hash_password(data.password)
 
     user = User(
-        name = data.name,
-        email_address = data.email_address,
-        hash_password = hash_password
+        name=data.name,
+        email_address=email_address,
+        hash_password=hashed_password,
     )
-    try: 
+
+    try:
         db.add(user)
         db.commit()
         db.refresh(user)
 
     except IntegrityError:
         db.rollback()
-    
+
         raise HTTPException(
-            status.HTTP_409_CONFLICT,
-            "Email already Exsit"
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already exists",
         )
+
+    return user
+
+
+def authenticate_user(
+    db: Session,
+    email_address: str,
+    password: str,
+) -> User | None:
+    user = get_user_by_email(
+        db=db,
+        email_address=email_address.lower(),
+    )
+
+    if user is None:
+        return None
+
+    if not user.is_active:
+        return None
+
+    password_is_correct = verify_password(
+        plain_password=password,
+        hashed_password=user.hash_password,
+    )
+
+    if not password_is_correct:
+        return None
+
+    return user
